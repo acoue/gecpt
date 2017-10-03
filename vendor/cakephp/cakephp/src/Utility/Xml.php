@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         0.10.3
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Utility;
 
@@ -107,7 +107,7 @@ class Xml
             'return' => 'simplexml',
             'loadEntities' => false,
             'readFile' => true,
-            'parseHuge' => true,
+            'parseHuge' => false,
         ];
         $options += $defaults;
 
@@ -282,7 +282,7 @@ class Xml
                     if ($key[0] !== '@' && $format === 'tags') {
                         if (!is_numeric($value)) {
                             // Escape special characters
-                            // http://www.w3.org/TR/REC-xml/#syntax
+                            // https://www.w3.org/TR/REC-xml/#syntax
                             // https://bugs.php.net/bug.php?id=36795
                             $child = $dom->createElement($key, '');
                             $child->appendChild(new DOMText($value));
@@ -328,8 +328,20 @@ class Xml
      */
     protected static function _createChild($data)
     {
-        $value = $dom = $key = $format = $node = null;
-        extract($data);
+        $data += [
+            'dom' => null,
+            'node' => null,
+            'key' => null,
+            'value' => null,
+            'format' => null,
+        ];
+
+        $value = $data['value'];
+        $dom = $data['dom'];
+        $key = $data['key'];
+        $format = $data['format'];
+        $node = $data['node'];
+
         $childNS = $childValue = null;
         if (is_object($value) && method_exists($value, 'toArray') && is_callable([$value, 'toArray'])) {
             $value = call_user_func([$value, 'toArray']);

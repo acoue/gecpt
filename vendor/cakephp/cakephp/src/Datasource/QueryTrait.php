@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Datasource;
 
@@ -28,7 +28,7 @@ trait QueryTrait
     /**
      * Instance of a table object this query is bound to
      *
-     * @var \Cake\Datasource\RepositoryInterface
+     * @var \Cake\ORM\Table|\Cake\Datasource\RepositoryInterface
      */
     protected $_repository;
 
@@ -181,9 +181,20 @@ trait QueryTrait
     }
 
     /**
+     * Returns the current configured query `_eagerLoaded` value
+     *
+     * @return bool
+     */
+    public function isEagerLoaded()
+    {
+        return $this->_eagerLoaded;
+    }
+
+    /**
      * Sets the query instance to be an eager loaded query. If no argument is
      * passed, the current configured query `_eagerLoaded` value is returned.
      *
+     * @deprecated 3.5.0 Use isEagerLoaded() for the getter part instead.
      * @param bool|null $value Whether or not to eager load.
      * @return $this|\Cake\ORM\Query
      */
@@ -219,7 +230,7 @@ trait QueryTrait
         }
 
         if (!$alias) {
-            $alias = $this->repository()->alias();
+            $alias = $this->repository()->getAlias();
         }
 
         $key = sprintf('%s__%s', $alias, $field);

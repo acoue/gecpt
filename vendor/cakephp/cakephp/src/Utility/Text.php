@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Utility;
 
@@ -35,29 +35,34 @@ class Text
      * Warning: This method should not be used as a random seed for any cryptographic operations.
      * Instead you should use the openssl or mcrypt extensions.
      *
-     * @see http://www.ietf.org/rfc/rfc4122.txt
+     * It should also not be used to create identifiers that have security implications, such as
+     * 'unguessable' URL identifiers. Instead you should use `Security::randomBytes()` for that.
+     *
+     * @see https://www.ietf.org/rfc/rfc4122.txt
      * @return string RFC 4122 UUID
      * @copyright Matt Farina MIT License https://github.com/lootils/uuid/blob/master/LICENSE
      */
     public static function uuid()
     {
+        $random = function_exists('random_int') ? 'random_int' : 'mt_rand';
+
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
+            $random(0, 65535),
+            $random(0, 65535),
             // 16 bits for "time_mid"
-            mt_rand(0, 65535),
+            $random(0, 65535),
             // 12 bits before the 0100 of (version) 4 for "time_hi_and_version"
-            mt_rand(0, 4095) | 0x4000,
+            $random(0, 4095) | 0x4000,
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-            mt_rand(0, 0x3fff) | 0x8000,
+            $random(0, 0x3fff) | 0x8000,
             // 48 bits for "node"
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535)
+            $random(0, 65535),
+            $random(0, 65535),
+            $random(0, 65535)
         );
     }
 
@@ -195,8 +200,6 @@ class Text
 
             return $options['clean'] ? static::cleanInsert($str, $options) : $str;
         }
-
-        asort($data);
 
         $dataKeys = array_keys($data);
         $hashKeys = array_map('crc32', $dataKeys);
@@ -463,7 +466,7 @@ class Text
      * @param string|array $phrase The phrase or phrases that will be searched.
      * @param array $options An array of HTML attributes and options.
      * @return string The highlighted text
-     * @link http://book.cakephp.org/3.0/en/core-libraries/string.html#highlighting-substrings
+     * @link https://book.cakephp.org/3.0/en/core-libraries/text.html#highlighting-substrings
      */
     public static function highlight($text, $phrase, array $options = [])
     {
@@ -580,7 +583,7 @@ class Text
      * @param int $length Length of returned string, including ellipsis.
      * @param array $options An array of HTML attributes and options.
      * @return string Trimmed string.
-     * @link http://book.cakephp.org/3.0/en/core-libraries/string.html#truncating-text
+     * @link https://book.cakephp.org/3.0/en/core-libraries/text.html#truncating-text
      */
     public static function truncate($text, $length = 100, array $options = [])
     {
@@ -848,7 +851,7 @@ class Text
      * @param int $radius The amount of characters that will be returned on each side of the founded phrase
      * @param string $ellipsis Ending that will be appended
      * @return string Modified string
-     * @link http://book.cakephp.org/3.0/en/core-libraries/string.html#extracting-an-excerpt
+     * @link https://book.cakephp.org/3.0/en/core-libraries/text.html#extracting-an-excerpt
      */
     public static function excerpt($text, $phrase, $radius = 100, $ellipsis = '...')
     {
@@ -891,7 +894,7 @@ class Text
      * @param string|null $and The word used to join the last and second last items together with. Defaults to 'and'.
      * @param string $separator The separator used to join all the other items together. Defaults to ', '.
      * @return string The glued together string.
-     * @link http://book.cakephp.org/3.0/en/core-libraries/string.html#converting-an-array-to-sentence-form
+     * @link https://book.cakephp.org/3.0/en/core-libraries/text.html#converting-an-array-to-sentence-form
      */
     public static function toList(array $list, $and = null, $separator = ', ')
     {
@@ -1000,7 +1003,7 @@ class Text
      * @param mixed $default Value to be returned when invalid size was used, for example 'Unknown type'
      * @return mixed Number of bytes as integer on success, `$default` on failure if not false
      * @throws \InvalidArgumentException On invalid Unit type.
-     * @link http://book.cakephp.org/3.0/en/core-libraries/helpers/text.html
+     * @link https://book.cakephp.org/3.0/en/core-libraries/text.html#Cake\Utility\Text::parseFileSize
      */
     public static function parseFileSize($size, $default = false)
     {
@@ -1061,7 +1064,7 @@ class Text
      * @param string|null $transliteratorId Transliterator identifier. If null
      *   Text::$_defaultTransliteratorId will be used.
      * @return string
-     * @see http://php.net/manual/en/transliterator.transliterate.php
+     * @see https://secure.php.net/manual/en/transliterator.transliterate.php
      */
     public static function transliterate($string, $transliteratorId = null)
     {

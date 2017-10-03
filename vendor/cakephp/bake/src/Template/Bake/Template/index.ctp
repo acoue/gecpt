@@ -15,9 +15,9 @@
 %>
 <?php
 /**
-  * @var \<%= $namespace %>\View\AppView $this
-  * @var \<%= $namespace %>\Model\Entity\<%= $entityClass %>[]|\Cake\Collection\CollectionInterface $<%= $pluralVar %>
-  */
+ * @var \<%= $namespace %>\View\AppView $this
+ * @var \<%= $entityClass %>[]|\Cake\Collection\CollectionInterface $<%= $pluralVar %>
+ */
 ?>
 <%
 use Cake\Utility\Inflector;
@@ -86,7 +86,7 @@ if (!empty($indexColumns)) {
                 }
             }
             if ($isKey !== true) {
-                if (!in_array($schema->columnType($field), ['integer', 'biginteger', 'decimal', 'float'])) {
+                if (!in_array($schema->columnType($field), ['integer', 'float', 'decimal', 'biginteger', 'smallinteger', 'tinyinteger'])) {
 %>
                 <td><?= h($<%= $singularVar %>-><%= $field %>) ?></td>
 <%

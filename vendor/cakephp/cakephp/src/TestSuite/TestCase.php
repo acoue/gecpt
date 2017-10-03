@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\TestSuite;
 
@@ -127,6 +127,7 @@ abstract class TestCase extends BaseTestCase
      * Chooses which fixtures to load for a given test
      *
      * Each parameter is a model name that corresponds to a fixture, i.e. 'Posts', 'Authors', etc.
+     * Passing no parameters will cause all fixtures on the test case to load.
      *
      * @return void
      * @see \Cake\TestSuite\TestCase::$autoFixtures
@@ -140,6 +141,13 @@ abstract class TestCase extends BaseTestCase
         $args = func_get_args();
         foreach ($args as $class) {
             $this->fixtureManager->loadSingle($class, null, $this->dropTables);
+        }
+
+        if (empty($args)) {
+            $autoFixtures = $this->autoFixtures;
+            $this->autoFixtures = true;
+            $this->fixtureManager->load($this);
+            $this->autoFixtures = $autoFixtures;
         }
     }
 
@@ -675,5 +683,16 @@ abstract class TestCase extends BaseTestCase
         TableRegistry::set($alias, $mock);
 
         return $mock;
+    }
+
+    /**
+     * Set the app namespace
+     *
+     * @param string $appNamespace The app namespace, defaults to "TestApp".
+     * @return void
+     */
+    public static function setAppNamespace($appNamespace = 'TestApp')
+    {
+        Configure::write('App.namespace', $appNamespace);
     }
 }

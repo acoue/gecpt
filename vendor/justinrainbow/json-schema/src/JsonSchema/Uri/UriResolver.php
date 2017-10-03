@@ -61,8 +61,8 @@ class UriResolver implements UriResolverInterface
              . $components['authority']
              . $components['path'];
 
-        if (array_key_exists('query', $components)) {
-            $uri .= $components['query'];
+        if (array_key_exists('query', $components) && strlen($components['query'])) {
+            $uri .= '?' . $components['query'];
         }
         if (array_key_exists('fragment', $components)) {
             $uri .= '#' . $components['fragment'];
@@ -76,6 +76,17 @@ class UriResolver implements UriResolverInterface
      */
     public function resolve($uri, $baseUri = null)
     {
+        // treat non-uri base as local file path
+        if (!is_null($baseUri) && !filter_var($baseUri, \FILTER_VALIDATE_URL)) {
+            if (is_file($baseUri)) {
+                $baseUri = 'file://' . realpath($baseUri);
+            } elseif (is_dir($baseUri)) {
+                $baseUri = 'file://' . realpath($baseUri) . '/';
+            } else {
+                $baseUri = 'file://' . getcwd() . '/' . $baseUri;
+            }
+        }
+
         if ($uri == '') {
             return $baseUri;
         }
